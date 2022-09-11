@@ -1,0 +1,911 @@
+{smcl}
+{com}{sf}{ul off}{txt}{.-}
+      name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\TAF Lucas\Desktop\Mémoire\my_log_file.smcl
+  {txt}log type:  {res}smcl
+ {txt}opened on:  {res}22 May 2021, 00:01:16
+
+{com}. import excel "C:\Users\TAF Lucas\Desktop\Mémoire\BASE FINALE.xlsx", sheet("Feuil2") firstrow
+{res}{text}(17 vars, 438 obs)
+
+{com}. 
+. 
+. 
+. gen Rect_p = log( recettespropre)
+
+. 
+. gen Trans_i = log( Transfertinvest)
+
+. 
+. gen FADeC_i = log( FADeCinvest)
+
+. 
+. gen FADeC_fo = log( FADeCfonct)
+
+. 
+. gen Rect_nfi = log( recettenonfisc)
+
+. 
+. gen Rect_fi = log( recettefisc)
+
+. 
+. gen Deps_fo = log( depensefonct)
+
+. 
+. gen Deps_i = log( depenseinvst)
+
+. 
+. gen Pop = log( population)
+
+. 
+. gen Cap_i = log( capacitéinvest)
+
+. 
+. gen FADeC_a = log( fadecaffecté )
+{txt}(13 missing values generated)
+
+{com}. 
+. gen FADeC_na = log( fadecnonaffecté )
+
+. 
+. pwcorr Rect_p Trans_i FADeC_a FADeC_na Cap_i Deps_i Deps_fo Rect_fi Rect_nfi, sig
+
+             {txt}{c |}   Rect_p  Trans_i  FADeC_a FADeC_na    Cap_i   Deps_i  Deps_fo
+{hline 13}{c +}{hline 63}
+      Rect_p {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+     Trans_i {c |} {res}  0.1283   1.0000 
+             {txt}{c |}{res}   0.0072
+             {txt}{c |}
+     FADeC_a {c |} {res}  0.0620   0.4361   1.0000 
+             {txt}{c |}{res}   0.2021   0.0000
+             {txt}{c |}
+    FADeC_na {c |} {res}  0.0489   0.4082  -0.2618   1.0000 
+             {txt}{c |}{res}   0.3075   0.0000   0.0000
+             {txt}{c |}
+       Cap_i {c |} {res}  0.1328   0.4520   0.3323   0.0680   1.0000 
+             {txt}{c |}{res}   0.0054   0.0000   0.0000   0.1551
+             {txt}{c |}
+      Deps_i {c |} {res}  0.2206   0.4213   0.0016   0.3852   0.2454   1.0000 
+             {txt}{c |}{res}   0.0000   0.0000   0.9731   0.0000   0.0000
+             {txt}{c |}
+     Deps_fo {c |} {res}  0.8527   0.0916  -0.0420   0.1548   0.0477   0.1761   1.0000 
+             {txt}{c |}{res}   0.0000   0.0553   0.3872   0.0012   0.3188   0.0002
+             {txt}{c |}
+     Rect_fi {c |} {res}  0.8442   0.2851   0.0731   0.1833   0.1777   0.3039   0.7543 
+             {txt}{c |}{res}   0.0000   0.0000   0.1324   0.0001   0.0002   0.0000   0.0000
+             {txt}{c |}
+    Rect_nfi {c |} {res}  0.8377   0.0436   0.0944  -0.0278   0.1063   0.1224   0.7595 
+             {txt}{c |}{res}   0.0000   0.3630   0.0517   0.5610   0.0262   0.0104   0.0000
+             {txt}{c |}
+
+             {c |}  Rect_fi Rect_nfi
+{hline 13}{c +}{hline 18}
+     Rect_fi {c |} {res}  1.0000 
+             {txt}{c |}
+             {c |}
+    Rect_nfi {c |} {res}  0.5951   1.0000 
+             {txt}{c |}{res}   0.0000
+             {txt}{c |}
+
+{com}. 
+. xtset Identifiant Année
+{res}
+{col 1}{txt:Panel variable: }{res:Identifiant}{txt: (strongly balanced)}
+{p 1 16 2}{txt:Time variable: }{res:Année}{txt:, }{res:{bind:2013}}{txt: to }{res:{bind:2018}}{p_end}
+{txt}{col 10}Delta: {res}1 unit
+
+{com}. 
+. tab Année, gen( Année)
+
+      {txt}Année {c |}      Freq.     Percent        Cum.
+{hline 12}{c +}{hline 35}
+       2013 {c |}{res}         73       16.67       16.67
+{txt}       2014 {c |}{res}         73       16.67       33.33
+{txt}       2015 {c |}{res}         73       16.67       50.00
+{txt}       2016 {c |}{res}         73       16.67       66.67
+{txt}       2017 {c |}{res}         73       16.67       83.33
+{txt}       2018 {c |}{res}         73       16.67      100.00
+{txt}{hline 12}{c +}{hline 35}
+      Total {c |}{res}        438      100.00
+
+{com}. 
+. reg Rect_p L.Rect_p FADeC_a FADeC_na Rect_nfi Rect_fi Deps_fo Deps_i Cap_i Trans_i Année3 Année4 Année5 Année6
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       355
+{txt}{hline 13}{c +}{hline 34}   F(13, 341)      = {res}   391.92
+{txt}       Model {c |} {res} 231.434065        13  17.8026204   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 15.4897702       341  .045424546   {txt}R-squared       ={res}    0.9373
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.9349
+{txt}       Total {c |} {res} 246.923835       354  .697524958   {txt}Root MSE        =   {res} .21313
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      Rect_p{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}Rect_p {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} .3423934{col 26}{space 2} .0300418{col 37}{space 1}   11.40{col 46}{space 3}0.000{col 54}{space 4} .2833028{col 67}{space 3}  .401484
+{txt}{space 12} {c |}
+{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0576932{col 26}{space 2} .0276988{col 37}{space 1}   -2.08{col 46}{space 3}0.038{col 54}{space 4}-.1121752{col 67}{space 3}-.0032113
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.1340663{col 26}{space 2} .0456068{col 37}{space 1}   -2.94{col 46}{space 3}0.004{col 54}{space 4}-.2237724{col 67}{space 3}-.0443602
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2}  .191855{col 26}{space 2} .0210759{col 37}{space 1}    9.10{col 46}{space 3}0.000{col 54}{space 4} .1503998{col 67}{space 3} .2333102
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .2695922{col 26}{space 2} .0220426{col 37}{space 1}   12.23{col 46}{space 3}0.000{col 54}{space 4} .2262356{col 67}{space 3} .3129489
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} .2705922{col 26}{space 2} .0468868{col 37}{space 1}    5.77{col 46}{space 3}0.000{col 54}{space 4} .1783685{col 67}{space 3}  .362816
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .0232875{col 26}{space 2} .0285012{col 37}{space 1}    0.82{col 46}{space 3}0.414{col 54}{space 4}-.0327727{col 67}{space 3} .0793477
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}-.0376021{col 26}{space 2}  .051118{col 37}{space 1}   -0.74{col 46}{space 3}0.462{col 54}{space 4}-.1381483{col 67}{space 3} .0629441
+{txt}{space 5}Trans_i {c |}{col 14}{res}{space 2} .0152392{col 26}{space 2} .0481888{col 37}{space 1}    0.32{col 46}{space 3}0.752{col 54}{space 4}-.0795457{col 67}{space 3}  .110024
+{txt}{space 6}Année3 {c |}{col 14}{res}{space 2} -.007005{col 26}{space 2} .0386407{col 37}{space 1}   -0.18{col 46}{space 3}0.856{col 54}{space 4}-.0830091{col 67}{space 3} .0689991
+{txt}{space 6}Année4 {c |}{col 14}{res}{space 2}-.0453399{col 26}{space 2} .0467172{col 37}{space 1}   -0.97{col 46}{space 3}0.332{col 54}{space 4}-.1372301{col 67}{space 3} .0465502
+{txt}{space 6}Année5 {c |}{col 14}{res}{space 2} .0777959{col 26}{space 2} .0450509{col 37}{space 1}    1.73{col 46}{space 3}0.085{col 54}{space 4}-.0108167{col 67}{space 3} .1664086
+{txt}{space 6}Année6 {c |}{col 14}{res}{space 2}  .067386{col 26}{space 2} .0412852{col 37}{space 1}    1.63{col 46}{space 3}0.104{col 54}{space 4}-.0138197{col 67}{space 3} .1485917
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}  1.67488{col 26}{space 2} .7565558{col 37}{space 1}    2.21{col 46}{space 3}0.028{col 54}{space 4} .1867767{col 67}{space 3} 3.162984
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. 
+. estat vif
+
+{txt}    Variable {c |}       VIF       1/VIF  
+{hline 13}{c +}{hline 22}
+{space 5}Deps_fo {c |} {res}     5.87    0.170501
+{txt}{space 6}Rect_p {c |}
+{space 9}L1. {c |} {res}     4.88    0.204871
+{txt}{space 5}Rect_fi {c |} {res}     3.58    0.279696
+{txt}{space 4}Rect_nfi {c |} {res}     3.55    0.281337
+{txt}{space 5}Trans_i {c |} {res}     3.04    0.328536
+{txt}{space 4}FADeC_na {c |} {res}     3.02    0.331141
+{txt}{space 6}Année5 {c |} {res}     2.59    0.385958
+{txt}{space 6}Année4 {c |} {res}     2.58    0.387368
+{txt}{space 5}FADeC_a {c |} {res}     2.48    0.403143
+{txt}{space 6}Année6 {c |} {res}     2.13    0.469195
+{txt}{space 6}Année3 {c |} {res}     1.91    0.524635
+{txt}{space 7}Cap_i {c |} {res}     1.71    0.585233
+{txt}{space 6}Deps_i {c |} {res}     1.51    0.661229
+{txt}{hline 13}{c +}{hline 22}
+    Mean VIF {c |} {res}     2.99
+
+{com}. 
+. 
+. 
+. *model 1
+
+. 
+. xtabond2 Rect_p L.Rect_p FADeC_a FADeC_na Rect_nfi Rect_fi Deps_fo Deps_i Cap_i Trans_i Année3 Année4 Année5 Année6, two robust small gmm( L.Rect_p, lag(2 .) collapse) gmm( Deps_fo, lag(2 .) collapse) gmm( Rect_fi Rect_nfi Trans_i FADeC_na, lag(1 .) collapse) iv( FADeC_a Cap_i Deps_i Année3 Année4 Année5 Année6)
+{res}{txt}Favoring space over speed. To switch, type or click on {stata "mata: mata set matafavor speed, perm"}.
+{res}Warning: Two-step estimated covariance matrix of moments is singular.
+{res}  Using a generalized inverse to calculate optimal weighting matrix for two-step estimation.
+{res}  Difference-in-Sargan/Hansen statistics may be negative.
+
+{txt}Dynamic panel-data estimation, two-step system GMM
+{hline 78}
+Group variable: {res}Identifiant{txt}{col 49}Number of obs      = {res}      355
+{txt}Time variable : {res}Année{txt}{col 49}Number of groups   = {res}       73
+{txt}Number of instruments = {res}41{col 49}{txt}Obs per group: min = {res}        3
+{txt}F({res}13{txt}, {res}72{txt}){col 15}= {res} 27357.07{col 64}{txt}avg = {res}     4.86
+{txt}Prob > F{col 15}={res}     0.000{col 64}{txt}max = {res}        5
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 14}{c |}{col 26}   Corrected
+{col 1}      Rect_p{col 14}{c |} Coefficient{col 26}  std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 6}Rect_p {c |}
+{space 9}L1. {c |}{col 14}{res}{space 2} -.006059{col 26}{space 2}  .033949{col 37}{space 1}   -0.18{col 46}{space 3}0.859{col 54}{space 4}-.0737352{col 67}{space 3} .0616172
+{txt}{space 12} {c |}
+{space 5}FADeC_a {c |}{col 14}{res}{space 2} -.039077{col 26}{space 2} .0358213{col 37}{space 1}   -1.09{col 46}{space 3}0.279{col 54}{space 4}-.1104855{col 67}{space 3} .0323315
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.0324904{col 26}{space 2} .0623162{col 37}{space 1}   -0.52{col 46}{space 3}0.604{col 54}{space 4}-.1567156{col 67}{space 3} .0917347
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .3085197{col 26}{space 2} .0675843{col 37}{space 1}    4.56{col 46}{space 3}0.000{col 54}{space 4} .1737928{col 67}{space 3} .4432467
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .5120998{col 26}{space 2} .0632326{col 37}{space 1}    8.10{col 46}{space 3}0.000{col 54}{space 4} .3860478{col 67}{space 3} .6381518
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} .2110013{col 26}{space 2} .1204821{col 37}{space 1}    1.75{col 46}{space 3}0.084{col 54}{space 4}-.0291753{col 67}{space 3} .4511778
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}-.0004385{col 26}{space 2} .0352053{col 37}{space 1}   -0.01{col 46}{space 3}0.990{col 54}{space 4}-.0706191{col 67}{space 3}  .069742
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}-.0428039{col 26}{space 2} .0393134{col 37}{space 1}   -1.09{col 46}{space 3}0.280{col 54}{space 4}-.1211736{col 67}{space 3} .0355659
+{txt}{space 5}Trans_i {c |}{col 14}{res}{space 2} .0340452{col 26}{space 2}  .044999{col 37}{space 1}    0.76{col 46}{space 3}0.452{col 54}{space 4}-.0556586{col 67}{space 3}  .123749
+{txt}{space 6}Année3 {c |}{col 14}{res}{space 2}-.0353267{col 26}{space 2} .0388646{col 37}{space 1}   -0.91{col 46}{space 3}0.366{col 54}{space 4}-.1128019{col 67}{space 3} .0421485
+{txt}{space 6}Année4 {c |}{col 14}{res}{space 2}-.0816821{col 26}{space 2} .0544744{col 37}{space 1}   -1.50{col 46}{space 3}0.138{col 54}{space 4}-.1902748{col 67}{space 3} .0269107
+{txt}{space 6}Année5 {c |}{col 14}{res}{space 2} .0416394{col 26}{space 2}  .035547{col 37}{space 1}    1.17{col 46}{space 3}0.245{col 54}{space 4}-.0292222{col 67}{space 3} .1125011
+{txt}{space 6}Année6 {c |}{col 14}{res}{space 2} .0488235{col 26}{space 2} .0383024{col 37}{space 1}    1.27{col 46}{space 3}0.207{col 54}{space 4} -.027531{col 67}{space 3}  .125178
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 1.188364{col 26}{space 2} 1.362112{col 37}{space 1}    0.87{col 46}{space 3}0.386{col 54}{space 4}-1.526957{col 67}{space 3} 3.903684
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+Instruments for first differences equation
+{col 3}Standard
+{col 5}D.(FADeC_a Cap_i Deps_i Année3 Année4 Année5 Année6)
+{col 3}GMM-type (missing=0, separate instruments for each period unless collapsed)
+{col 5}L(1/5).(Rect_fi Rect_nfi Trans_i FADeC_na) collapsed
+{col 5}L(2/5).Deps_fo collapsed
+{col 5}L(2/5).L.Rect_p collapsed
+Instruments for levels equation
+{col 3}Standard
+{col 5}FADeC_a Cap_i Deps_i Année3 Année4 Année5 Année6
+{col 5}_cons
+{col 3}GMM-type (missing=0, separate instruments for each period unless collapsed)
+{col 5}D.(Rect_fi Rect_nfi Trans_i FADeC_na) collapsed
+{col 5}DL.Deps_fo collapsed
+{col 5}DL.L.Rect_p collapsed
+{hline 78}
+Arellano-Bond test for AR(1) in first differences:{col 52}z = {res} -3.04{txt}  Pr > z = {res} 0.002
+{txt}Arellano-Bond test for AR(2) in first differences:{col 52}z = {res} -0.97{txt}  Pr > z = {res} 0.334
+{txt}{hline 78}
+Sargan test of overid. restrictions: chi2({res}27{txt}){col 49}={res}  79.14{txt}{col 59}Prob > chi2 = {res} 0.000
+{txt}  (Not robust, but not weakened by many instruments.)
+Hansen test of overid. restrictions: chi2({res}27{txt}){col 49}={res}  22.99{txt}{col 59}Prob > chi2 = {res} 0.686
+{txt}  (Robust, but weakened by many instruments.)
+
+Difference-in-Hansen tests of exogeneity of instrument subsets:
+  GMM instruments for levels
+    Hansen test excluding group:{col 38}chi2({res}21{txt}){col 49}={res}  17.98{txt}{col 59}Prob > chi2 = {res} 0.650
+{txt}    Difference (null H = exogenous):{col 38}chi2({res}6{txt}){col 49}={res}   5.01{txt}{col 59}Prob > chi2 = {res} 0.543
+{txt}  gmm(L.Rect_p, collapse lag(2 .))
+    Hansen test excluding group:{col 38}chi2({res}23{txt}){col 49}={res}  20.07{txt}{col 59}Prob > chi2 = {res} 0.638
+{txt}    Difference (null H = exogenous):{col 38}chi2({res}4{txt}){col 49}={res}   2.92{txt}{col 59}Prob > chi2 = {res} 0.571
+{txt}  gmm(Deps_fo, collapse lag(2 .))
+    Hansen test excluding group:{col 38}chi2({res}22{txt}){col 49}={res}  18.11{txt}{col 59}Prob > chi2 = {res} 0.699
+{txt}    Difference (null H = exogenous):{col 38}chi2({res}5{txt}){col 49}={res}   4.88{txt}{col 59}Prob > chi2 = {res} 0.431
+{txt}  gmm(Rect_fi Rect_nfi Trans_i FADeC_na, collapse lag(1 .))
+    Hansen test excluding group:{col 38}chi2({res}3{txt}){col 49}={res}   0.84{txt}{col 59}Prob > chi2 = {res} 0.839
+{txt}    Difference (null H = exogenous):{col 38}chi2({res}24{txt}){col 49}={res}  22.14{txt}{col 59}Prob > chi2 = {res} 0.571
+{txt}  iv(FADeC_a Cap_i Deps_i Année3 Année4 Année5 Année6)
+    Hansen test excluding group:{col 38}chi2({res}20{txt}){col 49}={res}  17.48{txt}{col 59}Prob > chi2 = {res} 0.622
+{txt}    Difference (null H = exogenous):{col 38}chi2({res}7{txt}){col 49}={res}   5.51{txt}{col 59}Prob > chi2 = {res} 0.598
+
+
+{com}. 
+. lincom L.Rect_p - 1
+
+{p 0 7}{space 1}{text:( 1)}{space 1} {res}L.Rect_p = 1{p_end}
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}      Rect_p{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 9}(1) {c |}{col 14}{res}{space 2}-1.006059{col 26}{space 2}  .033949{col 37}{space 1}  -29.63{col 46}{space 3}0.000{col 54}{space 4}-1.073735{col 67}{space 3}-.9383828
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. 
+. 
+. *model 2
+
+. 
+. xtreg Rect_nfi Trans_i FADeC_a FADeC_na Cap_i Rect_fi Deps_fo Deps_i, fe
+{res}
+{txt}Fixed-effects (within) regression{col 49}Number of obs{col 67}={col 69}{res}       425
+{txt}Group variable: {res}Identifiant{txt}{col 49}Number of groups{col 67}={col 69}{res}        73
+
+{txt}R-squared:{col 49}Obs per group:
+     Within  = {res}0.1881{col 63}{txt}min{col 67}={col 69}{res}         4
+{txt}     Between = {res}0.5910{col 63}{txt}avg{col 67}={col 69}{res}       5.8
+{txt}     Overall = {res}0.5201{col 63}{txt}max{col 67}={col 69}{res}         6
+
+{txt}{col 49}F({res}7{txt},{res}345{txt}){col 67}={col 70}{res}    11.42
+{txt}corr(u_i, Xb) = {res}0.5197{txt}{col 49}Prob > F{col 67}={col 73}{res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    Rect_nfi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.0135364{col 26}{space 2} .0727964{col 37}{space 1}   -0.19{col 46}{space 3}0.853{col 54}{space 4} -.156717{col 67}{space 3} .1296442
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}  .095743{col 26}{space 2} .0425977{col 37}{space 1}    2.25{col 46}{space 3}0.025{col 54}{space 4} .0119591{col 67}{space 3} .1795269
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .0823317{col 26}{space 2} .0671905{col 37}{space 1}    1.23{col 46}{space 3}0.221{col 54}{space 4}-.0498228{col 67}{space 3} .2144861
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}  .290219{col 26}{space 2}   .08464{col 37}{space 1}    3.43{col 46}{space 3}0.001{col 54}{space 4} .1237438{col 67}{space 3} .4566943
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .0621484{col 26}{space 2} .0480226{col 37}{space 1}    1.29{col 46}{space 3}0.196{col 54}{space 4}-.0323055{col 67}{space 3} .1566022
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} .4346786{col 26}{space 2} .0675826{col 37}{space 1}    6.43{col 46}{space 3}0.000{col 54}{space 4} .3017529{col 67}{space 3} .5676043
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .0441463{col 26}{space 2} .0460255{col 37}{space 1}    0.96{col 46}{space 3}0.338{col 54}{space 4}-.0463795{col 67}{space 3} .1346722
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-1.468698{col 26}{space 2} 1.612856{col 37}{space 1}   -0.91{col 46}{space 3}0.363{col 54}{space 4}-4.640966{col 67}{space 3} 1.703569
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res}  .7368479
+     {txt}sigma_e {c |} {res} .32525844
+         {txt}rho {c |} {res} .83692481{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+F test that all u_i=0: F({res}72{txt}, {res}345{txt}) = {res}16.59{col 62}{txt}Prob > F = {res}0.0000
+
+{com}. 
+. est store fe1
+
+. 
+. xtreg Rect_nfi Trans_i FADeC_a FADeC_na Cap_i Rect_fi Deps_fo Deps_i, re
+{res}
+{txt}Random-effects GLS regression                   Number of obs     = {res}       425
+{txt}Group variable: {res}Identifiant                     {txt}Number of groups  = {res}        73
+
+{txt}R-squared:                                      Obs per group:
+     Within  = {res}0.1777                                         {txt}min = {res}         4
+{txt}     Between = {res}0.6378                                         {txt}avg = {res}       5.8
+{txt}     Overall = {res}0.5628                                         {txt}max = {res}         6
+
+                                                {txt}Wald chi2({res}7{txt})      =  {res}   189.65
+{txt}corr(u_i, X) = {res}0{txt} (assumed)                      Prob > chi2       =     {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    Rect_nfi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.0102087{col 26}{space 2}   .07878{col 37}{space 1}   -0.13{col 46}{space 3}0.897{col 54}{space 4}-.1646146{col 67}{space 3} .1441972
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2} .1063846{col 26}{space 2} .0458891{col 37}{space 1}    2.32{col 46}{space 3}0.020{col 54}{space 4} .0164437{col 67}{space 3} .1963255
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .0039653{col 26}{space 2} .0713689{col 37}{space 1}    0.06{col 46}{space 3}0.956{col 54}{space 4}-.1359152{col 67}{space 3} .1438457
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .2698997{col 26}{space 2} .0904187{col 37}{space 1}    2.98{col 46}{space 3}0.003{col 54}{space 4} .0926822{col 67}{space 3} .4471171
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .1233288{col 26}{space 2} .0460541{col 37}{space 1}    2.68{col 46}{space 3}0.007{col 54}{space 4} .0330644{col 67}{space 3} .2135931
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} .6526911{col 26}{space 2} .0685855{col 37}{space 1}    9.52{col 46}{space 3}0.000{col 54}{space 4}  .518266{col 67}{space 3} .7871162
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}  .072348{col 26}{space 2}   .04954{col 37}{space 1}    1.46{col 46}{space 3}0.144{col 54}{space 4}-.0247485{col 67}{space 3} .1694446
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-4.081537{col 26}{space 2} 1.587761{col 37}{space 1}   -2.57{col 46}{space 3}0.010{col 54}{space 4}-7.193491{col 67}{space 3}-.9695827
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .43700058
+     {txt}sigma_e {c |} {res} .32525844
+         {txt}rho {c |} {res} .64350943{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+
+{com}. 
+. est store re1
+
+. 
+. xttest0
+
+{txt}Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Rect_nfi[Identifiant,t] = Xb + u[Identifiant] + e[Identifiant,t]
+
+{col 9}Estimated results:
+{col 26}{c |}{col 34}Var{col 42}SD = sqrt(Var)
+{col 17}{hline 9}{c +}{hline 29}
+{col 16} Rect_nfi {c |}  {res} 1.009314       1.004646
+{col 24}{txt}e {c |}  {res} .1057931       .3252584
+{col 24}{txt}u {c |}  {res} .1909695       .4370006
+
+{txt}{col 9}Test: Var(u) = 0
+{col 30}{help j_chibar:chibar2(01)} ={col 44}{res}  294.05
+{txt}{col 27}Prob > chibar2 = {col 45}{res} 0.0000
+
+{com}. 
+. xtreg Rect_nfi Trans_i FADeC_a FADeC_na Cap_i Rect_fi Deps_fo Deps_i, re
+{res}
+{txt}Random-effects GLS regression                   Number of obs     = {res}       425
+{txt}Group variable: {res}Identifiant                     {txt}Number of groups  = {res}        73
+
+{txt}R-squared:                                      Obs per group:
+     Within  = {res}0.1777                                         {txt}min = {res}         4
+{txt}     Between = {res}0.6378                                         {txt}avg = {res}       5.8
+{txt}     Overall = {res}0.5628                                         {txt}max = {res}         6
+
+                                                {txt}Wald chi2({res}7{txt})      =  {res}   189.65
+{txt}corr(u_i, X) = {res}0{txt} (assumed)                      Prob > chi2       =     {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    Rect_nfi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.0102087{col 26}{space 2}   .07878{col 37}{space 1}   -0.13{col 46}{space 3}0.897{col 54}{space 4}-.1646146{col 67}{space 3} .1441972
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2} .1063846{col 26}{space 2} .0458891{col 37}{space 1}    2.32{col 46}{space 3}0.020{col 54}{space 4} .0164437{col 67}{space 3} .1963255
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .0039653{col 26}{space 2} .0713689{col 37}{space 1}    0.06{col 46}{space 3}0.956{col 54}{space 4}-.1359152{col 67}{space 3} .1438457
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .2698997{col 26}{space 2} .0904187{col 37}{space 1}    2.98{col 46}{space 3}0.003{col 54}{space 4} .0926822{col 67}{space 3} .4471171
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .1233288{col 26}{space 2} .0460541{col 37}{space 1}    2.68{col 46}{space 3}0.007{col 54}{space 4} .0330644{col 67}{space 3} .2135931
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} .6526911{col 26}{space 2} .0685855{col 37}{space 1}    9.52{col 46}{space 3}0.000{col 54}{space 4}  .518266{col 67}{space 3} .7871162
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}  .072348{col 26}{space 2}   .04954{col 37}{space 1}    1.46{col 46}{space 3}0.144{col 54}{space 4}-.0247485{col 67}{space 3} .1694446
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-4.081537{col 26}{space 2} 1.587761{col 37}{space 1}   -2.57{col 46}{space 3}0.010{col 54}{space 4}-7.193491{col 67}{space 3}-.9695827
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .43700058
+     {txt}sigma_e {c |} {res} .32525844
+         {txt}rho {c |} {res} .64350943{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+
+{com}. 
+. predict residu2
+({txt}option {bf:xb} assumed; fitted values)
+(13 missing values generated)
+
+{com}. 
+. sktest residu2
+{res}
+{txt}Skewness and kurtosis tests for normality
+{col 58}{hline 5} Joint test {hline 5}
+{col 5}Variable {c |}{col 22}Obs   Pr(skewness)   Pr(kurtosis)   Adj chi2(2)  Prob>chi2
+{hline 13}{c +}{hline 65}
+     residu2 {c |}{res}{col 16}      425{col 34}0.6101{col 49}0.6459{col 60}     0.48{col 74}0.7886
+
+{com}. 
+. xtserial residu2
+
+{txt}Wooldridge test for autocorrelation in panel data
+H0: no first-order autocorrelation
+{col 5}F(  1,      70) = {res}     2.318
+{txt}{col 12}Prob > F = {res}     0.1324
+
+{com}. 
+. gen residu2carré = residu2^2
+{txt}(13 missing values generated)
+
+{com}. 
+. reg residu2carré Trans_i FADeC_a FADeC_na Cap_i Rect_fi Deps_fo Deps_i
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       425
+{txt}{hline 13}{c +}{hline 34}   F(7, 417)       = {res} 63294.10
+{txt}       Model {c |} {res} 52751.8064         7  7535.97234   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 49.6491834       417   .11906279   {txt}R-squared       ={res}    0.9991
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.9990
+{txt}       Total {c |} {res} 52801.4556       424  124.531735   {txt}Root MSE        =   {res} .34505
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}residu2carré{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2} -.171108{col 26}{space 2} .0669262{col 37}{space 1}   -2.56{col 46}{space 3}0.011{col 54}{space 4}-.3026627{col 67}{space 3}-.0395533
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2} 2.327456{col 26}{space 2} .0375887{col 37}{space 1}   61.92{col 46}{space 3}0.000{col 54}{space 4} 2.253569{col 67}{space 3} 2.401343
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.0494369{col 26}{space 2} .0552862{col 37}{space 1}   -0.89{col 46}{space 3}0.372{col 54}{space 4}-.1581112{col 67}{space 3} .0592374
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}   6.0389{col 26}{space 2} .0692924{col 37}{space 1}   87.15{col 46}{space 3}0.000{col 54}{space 4} 5.902694{col 67}{space 3} 6.175106
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} 2.644253{col 26}{space 2}  .028412{col 37}{space 1}   93.07{col 46}{space 3}0.000{col 54}{space 4} 2.588404{col 67}{space 3} 2.700101
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} 14.40719{col 26}{space 2}  .045769{col 37}{space 1}  314.78{col 46}{space 3}0.000{col 54}{space 4} 14.31722{col 67}{space 3} 14.49715
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} 1.721543{col 26}{space 2} .0428065{col 37}{space 1}   40.22{col 46}{space 3}0.000{col 54}{space 4} 1.637399{col 67}{space 3} 1.805686
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} -212.226{col 26}{space 2} 1.047878{col 37}{space 1} -202.53{col 46}{space 3}0.000{col 54}{space 4}-214.2858{col 67}{space 3}-210.1662
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. 
+. hettest
+
+{txt}Breusch–Pagan/Cook–Weisberg test for heteroskedasticity 
+Assumption: Normal error terms
+{p 0 11 0}Variable:{space 1}{res:{txt:Fitted values of} {res:residu2carré}}{p_end}
+
+H0: Constant variance
+
+{ralign 11:chi2({res:1})} = {res}{ralign 6:24.22}
+{txt}{ralign 11:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{com}. 
+. xtgls Rect_nfi Trans_i FADeC_a FADeC_na Cap_i Rect_fi Deps_fo Deps_i, panels(hetero)
+
+{txt}Cross-sectional time-series FGLS regression
+
+Coefficients:  {res}generalized least squares
+{txt}Panels:        {res}heteroskedastic
+{txt}Correlation:   {res}no autocorrelation
+
+{txt}Estimated covariances{col 28}= {res}       73{txt}{col 49}Number of obs{col 67}= {res}       425
+{txt}Estimated autocorrelations{col 28}= {res}        0{txt}{col 49}Number of groups{col 67}= {res}        73
+{txt}Estimated coefficients{col 28}= {res}        8{txt}{col 49}Obs per group:
+{col 63}min{col 67}= {res}         4
+{txt}{col 63}avg{col 67}=  {res} 5.821918
+{txt}{col 63}max{col 67}= {res}         6
+{txt}{col 49}Wald chi2({res}7{txt}){col 67}=  {res}  1383.91
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}    Rect_nfi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.1379427{col 26}{space 2} .0798242{col 37}{space 1}   -1.73{col 46}{space 3}0.084{col 54}{space 4}-.2943952{col 67}{space 3} .0185099
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2} .1278309{col 26}{space 2} .0473906{col 37}{space 1}    2.70{col 46}{space 3}0.007{col 54}{space 4} .0349471{col 67}{space 3} .2207147
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.2832329{col 26}{space 2} .0662549{col 37}{space 1}   -4.27{col 46}{space 3}0.000{col 54}{space 4}-.4130901{col 67}{space 3}-.1533757
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .1559047{col 26}{space 2} .0903274{col 37}{space 1}    1.73{col 46}{space 3}0.084{col 54}{space 4}-.0211337{col 67}{space 3} .3329431
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .0289247{col 26}{space 2}  .039727{col 37}{space 1}    0.73{col 46}{space 3}0.467{col 54}{space 4}-.0489387{col 67}{space 3} .1067882
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} 1.224488{col 26}{space 2}  .061139{col 37}{space 1}   20.03{col 46}{space 3}0.000{col 54}{space 4} 1.104657{col 67}{space 3} 1.344318
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .1300798{col 26}{space 2} .0539231{col 37}{space 1}    2.41{col 46}{space 3}0.016{col 54}{space 4} .0243925{col 67}{space 3} .2357671
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} -4.19169{col 26}{space 2} 1.286926{col 37}{space 1}   -3.26{col 46}{space 3}0.001{col 54}{space 4}-6.714018{col 67}{space 3}-1.669361
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. 
+. 
+. *model 3
+
+. 
+. xtreg Rect_fi Trans_i FADeC_a FADeC_na Cap_i Rect_nfi Deps_fo Deps_i, fe
+{res}
+{txt}Fixed-effects (within) regression{col 49}Number of obs{col 67}={col 69}{res}       425
+{txt}Group variable: {res}Identifiant{txt}{col 49}Number of groups{col 67}={col 69}{res}        73
+
+{txt}R-squared:{col 49}Obs per group:
+     Within  = {res}0.1433{col 63}{txt}min{col 67}={col 69}{res}         4
+{txt}     Between = {res}0.6889{col 63}{txt}avg{col 67}={col 69}{res}       5.8
+{txt}     Overall = {res}0.5960{col 63}{txt}max{col 67}={col 69}{res}         6
+
+{txt}{col 49}F({res}7{txt},{res}345{txt}){col 67}={col 70}{res}     8.25
+{txt}corr(u_i, Xb) = {res}0.6147{txt}{col 49}Prob > F{col 67}={col 73}{res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Rect_fi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2} .1625821{col 26}{space 2}  .080947{col 37}{space 1}    2.01{col 46}{space 3}0.045{col 54}{space 4} .0033704{col 67}{space 3} .3217939
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0463744{col 26}{space 2} .0479234{col 37}{space 1}   -0.97{col 46}{space 3}0.334{col 54}{space 4}-.1406332{col 67}{space 3} .0478845
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.2023168{col 26}{space 2} .0745166{col 37}{space 1}   -2.72{col 46}{space 3}0.007{col 54}{space 4}-.3488809{col 67}{space 3}-.0557527
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .1376053{col 26}{space 2} .0959745{col 37}{space 1}    1.43{col 46}{space 3}0.153{col 54}{space 4}-.0511634{col 67}{space 3} .3263739
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .0777351{col 26}{space 2} .0600665{col 37}{space 1}    1.29{col 46}{space 3}0.196{col 54}{space 4}-.0404076{col 67}{space 3} .1958777
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} .4611577{col 26}{space 2} .0760361{col 37}{space 1}    6.06{col 46}{space 3}0.000{col 54}{space 4}  .311605{col 67}{space 3} .6107105
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .0528143{col 26}{space 2} .0514645{col 37}{space 1}    1.03{col 46}{space 3}0.306{col 54}{space 4}-.0484094{col 67}{space 3}  .154038
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 2.991725{col 26}{space 2} 1.798772{col 37}{space 1}    1.66{col 46}{space 3}0.097{col 54}{space 4}-.5462147{col 67}{space 3} 6.529665
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .67439651
+     {txt}sigma_e {c |} {res} .36376596
+         {txt}rho {c |} {res}  .7746253{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+F test that all u_i=0: F({res}72{txt}, {res}345{txt}) = {res}10.68{col 62}{txt}Prob > F = {res}0.0000
+
+{com}. 
+. est store Fe1
+
+. 
+. xtreg Rect_fi Trans_i FADeC_a FADeC_na Cap_i Rect_nfi Deps_fo Deps_i, re
+{res}
+{txt}Random-effects GLS regression                   Number of obs     = {res}       425
+{txt}Group variable: {res}Identifiant                     {txt}Number of groups  = {res}        73
+
+{txt}R-squared:                                      Obs per group:
+     Within  = {res}0.1377                                         {txt}min = {res}         4
+{txt}     Between = {res}0.7113                                         {txt}avg = {res}       5.8
+{txt}     Overall = {res}0.6177                                         {txt}max = {res}         6
+
+                                                {txt}Wald chi2({res}7{txt})      =  {res}   194.61
+{txt}corr(u_i, X) = {res}0{txt} (assumed)                      Prob > chi2       =     {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Rect_fi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2} .2609961{col 26}{space 2} .0837002{col 37}{space 1}    3.12{col 46}{space 3}0.002{col 54}{space 4} .0969466{col 67}{space 3} .4250455
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0413393{col 26}{space 2} .0495317{col 37}{space 1}   -0.83{col 46}{space 3}0.404{col 54}{space 4}-.1384196{col 67}{space 3} .0557411
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.1932667{col 26}{space 2} .0758091{col 37}{space 1}   -2.55{col 46}{space 3}0.011{col 54}{space 4}-.3418498{col 67}{space 3}-.0446836
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .1309285{col 26}{space 2} .0976202{col 37}{space 1}    1.34{col 46}{space 3}0.180{col 54}{space 4}-.0604036{col 67}{space 3} .3222607
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .1387438{col 26}{space 2} .0507153{col 37}{space 1}    2.74{col 46}{space 3}0.006{col 54}{space 4} .0393436{col 67}{space 3} .2381441
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2}  .696386{col 26}{space 2} .0734486{col 37}{space 1}    9.48{col 46}{space 3}0.000{col 54}{space 4} .5524294{col 67}{space 3} .8403426
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .1250033{col 26}{space 2}  .053006{col 37}{space 1}    2.36{col 46}{space 3}0.018{col 54}{space 4} .0211134{col 67}{space 3} .2288931
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.797188{col 26}{space 2} 1.689616{col 37}{space 1}   -1.66{col 46}{space 3}0.098{col 54}{space 4}-6.108775{col 67}{space 3} .5143984
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .43401517
+     {txt}sigma_e {c |} {res} .36376596
+         {txt}rho {c |} {res} .58737824{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+
+{com}. 
+. est store Re1
+
+. 
+. xttest0
+
+{txt}Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Rect_fi[Identifiant,t] = Xb + u[Identifiant] + e[Identifiant,t]
+
+{col 9}Estimated results:
+{col 26}{c |}{col 34}Var{col 42}SD = sqrt(Var)
+{col 17}{hline 9}{c +}{hline 29}
+{col 16}  Rect_fi {c |}  {res} .9712943       .9855426
+{col 24}{txt}e {c |}  {res} .1323257        .363766
+{col 24}{txt}u {c |}  {res} .1883692       .4340152
+
+{txt}{col 9}Test: Var(u) = 0
+{col 30}{help j_chibar:chibar2(01)} ={col 44}{res}  233.41
+{txt}{col 27}Prob > chibar2 = {col 45}{res} 0.0000
+
+{com}. 
+. xtreg Rect_fi Trans_i FADeC_a FADeC_na Cap_i Rect_nfi Deps_fo Deps_i, re
+{res}
+{txt}Random-effects GLS regression                   Number of obs     = {res}       425
+{txt}Group variable: {res}Identifiant                     {txt}Number of groups  = {res}        73
+
+{txt}R-squared:                                      Obs per group:
+     Within  = {res}0.1377                                         {txt}min = {res}         4
+{txt}     Between = {res}0.7113                                         {txt}avg = {res}       5.8
+{txt}     Overall = {res}0.6177                                         {txt}max = {res}         6
+
+                                                {txt}Wald chi2({res}7{txt})      =  {res}   194.61
+{txt}corr(u_i, X) = {res}0{txt} (assumed)                      Prob > chi2       =     {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Rect_fi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2} .2609961{col 26}{space 2} .0837002{col 37}{space 1}    3.12{col 46}{space 3}0.002{col 54}{space 4} .0969466{col 67}{space 3} .4250455
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0413393{col 26}{space 2} .0495317{col 37}{space 1}   -0.83{col 46}{space 3}0.404{col 54}{space 4}-.1384196{col 67}{space 3} .0557411
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.1932667{col 26}{space 2} .0758091{col 37}{space 1}   -2.55{col 46}{space 3}0.011{col 54}{space 4}-.3418498{col 67}{space 3}-.0446836
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .1309285{col 26}{space 2} .0976202{col 37}{space 1}    1.34{col 46}{space 3}0.180{col 54}{space 4}-.0604036{col 67}{space 3} .3222607
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .1387438{col 26}{space 2} .0507153{col 37}{space 1}    2.74{col 46}{space 3}0.006{col 54}{space 4} .0393436{col 67}{space 3} .2381441
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2}  .696386{col 26}{space 2} .0734486{col 37}{space 1}    9.48{col 46}{space 3}0.000{col 54}{space 4} .5524294{col 67}{space 3} .8403426
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .1250033{col 26}{space 2}  .053006{col 37}{space 1}    2.36{col 46}{space 3}0.018{col 54}{space 4} .0211134{col 67}{space 3} .2288931
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-2.797188{col 26}{space 2} 1.689616{col 37}{space 1}   -1.66{col 46}{space 3}0.098{col 54}{space 4}-6.108775{col 67}{space 3} .5143984
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .43401517
+     {txt}sigma_e {c |} {res} .36376596
+         {txt}rho {c |} {res} .58737824{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+
+{com}. 
+. predict residu3
+({txt}option {bf:xb} assumed; fitted values)
+(13 missing values generated)
+
+{com}. 
+. sktest residu3
+{res}
+{txt}Skewness and kurtosis tests for normality
+{col 58}{hline 5} Joint test {hline 5}
+{col 5}Variable {c |}{col 22}Obs   Pr(skewness)   Pr(kurtosis)   Adj chi2(2)  Prob>chi2
+{hline 13}{c +}{hline 65}
+     residu3 {c |}{res}{col 16}      425{col 34}0.4890{col 49}0.9099{col 60}     0.50{col 74}0.7806
+
+{com}. 
+. xtserial residu3
+
+{txt}Wooldridge test for autocorrelation in panel data
+H0: no first-order autocorrelation
+{col 5}F(  1,      70) = {res}     8.340
+{txt}{col 12}Prob > F = {res}     0.0052
+
+{com}. 
+. gen residu3carré = residu3^2
+{txt}(13 missing values generated)
+
+{com}. 
+. reg residu3carré Trans_i FADeC_a FADeC_na Cap_i Rect_nfi Deps_fo Deps_i
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       425
+{txt}{hline 13}{c +}{hline 34}   F(7, 417)       = {res} 52470.50
+{txt}       Model {c |} {res} 62372.5648         7   8910.3664   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res}  70.813563       417  .169816698   {txt}R-squared       ={res}    0.9989
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.9988
+{txt}       Total {c |} {res} 62443.3784       424  147.272119   {txt}Root MSE        =   {res} .41209
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}residu3carré{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2} 5.762245{col 26}{space 2} .0782283{col 37}{space 1}   73.66{col 46}{space 3}0.000{col 54}{space 4} 5.608474{col 67}{space 3} 5.916016
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.9580942{col 26}{space 2} .0451475{col 37}{space 1}  -21.22{col 46}{space 3}0.000{col 54}{space 4}-1.046839{col 67}{space 3}-.8693492
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-4.529822{col 26}{space 2} .0665877{col 37}{space 1}  -68.03{col 46}{space 3}0.000{col 54}{space 4}-4.660712{col 67}{space 3}-4.398933
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} 2.998363{col 26}{space 2} .0829011{col 37}{space 1}   36.17{col 46}{space 3}0.000{col 54}{space 4} 2.835406{col 67}{space 3} 3.161319
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} 2.984022{col 26}{space 2} .0322796{col 37}{space 1}   92.44{col 46}{space 3}0.000{col 54}{space 4} 2.920572{col 67}{space 3} 3.047473
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} 15.55679{col 26}{space 2} .0560064{col 37}{space 1}  277.77{col 46}{space 3}0.000{col 54}{space 4}  15.4467{col 67}{space 3} 15.66688
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} 2.901161{col 26}{space 2} .0505739{col 37}{space 1}   57.36{col 46}{space 3}0.000{col 54}{space 4}  2.80175{col 67}{space 3} 3.000573
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-184.1474{col 26}{space 2} 1.190079{col 37}{space 1} -154.74{col 46}{space 3}0.000{col 54}{space 4}-186.4867{col 67}{space 3}-181.8081
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. 
+. hettest
+
+{txt}Breusch–Pagan/Cook–Weisberg test for heteroskedasticity 
+Assumption: Normal error terms
+{p 0 11 0}Variable:{space 1}{res:{txt:Fitted values of} {res:residu3carré}}{p_end}
+
+H0: Constant variance
+
+{ralign 11:chi2({res:1})} = {res}{ralign 6:20.11}
+{txt}{ralign 11:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{com}. 
+. xtgls Rect_fi Trans_i FADeC_a FADeC_na Cap_i Rect_nfi Deps_fo Deps_i, panels(hetero)
+
+{txt}Cross-sectional time-series FGLS regression
+
+Coefficients:  {res}generalized least squares
+{txt}Panels:        {res}heteroskedastic
+{txt}Correlation:   {res}no autocorrelation
+
+{txt}Estimated covariances{col 28}= {res}       73{txt}{col 49}Number of obs{col 67}= {res}       425
+{txt}Estimated autocorrelations{col 28}= {res}        0{txt}{col 49}Number of groups{col 67}= {res}        73
+{txt}Estimated coefficients{col 28}= {res}        8{txt}{col 49}Obs per group:
+{col 63}min{col 67}= {res}         4
+{txt}{col 63}avg{col 67}=  {res} 5.821918
+{txt}{col 63}max{col 67}= {res}         6
+{txt}{col 49}Wald chi2({res}7{txt}){col 67}=  {res}  1935.44
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Rect_fi{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2} .4884195{col 26}{space 2} .0696493{col 37}{space 1}    7.01{col 46}{space 3}0.000{col 54}{space 4} .3519094{col 67}{space 3} .6249296
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0204637{col 26}{space 2} .0390354{col 37}{space 1}   -0.52{col 46}{space 3}0.600{col 54}{space 4}-.0969717{col 67}{space 3} .0560442
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}-.1635895{col 26}{space 2} .0558086{col 37}{space 1}   -2.93{col 46}{space 3}0.003{col 54}{space 4}-.2729723{col 67}{space 3}-.0542066
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} .0383137{col 26}{space 2} .0790912{col 37}{space 1}    0.48{col 46}{space 3}0.628{col 54}{space 4}-.1167023{col 67}{space 3} .1933297
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .0131508{col 26}{space 2} .0360261{col 37}{space 1}    0.37{col 46}{space 3}0.715{col 54}{space 4} -.057459{col 67}{space 3} .0837606
+{txt}{space 5}Deps_fo {c |}{col 14}{res}{space 2} 1.208708{col 26}{space 2} .0583075{col 37}{space 1}   20.73{col 46}{space 3}0.000{col 54}{space 4} 1.094427{col 67}{space 3} 1.322989
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2} .2682896{col 26}{space 2} .0504495{col 37}{space 1}    5.32{col 46}{space 3}0.000{col 54}{space 4} .1694103{col 67}{space 3} .3671688
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2}-11.73936{col 26}{space 2} 1.145166{col 37}{space 1}  -10.25{col 46}{space 3}0.000{col 54}{space 4}-13.98384{col 67}{space 3}-9.494873
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. 
+. 
+. 
+. *model 4
+
+. 
+. xtreg Deps_fo Trans_i FADeC_a FADeC_na Rect_nfi Rect_fi Deps_i Cap_i, fe
+{res}
+{txt}Fixed-effects (within) regression{col 49}Number of obs{col 67}={col 69}{res}       425
+{txt}Group variable: {res}Identifiant{txt}{col 49}Number of groups{col 67}={col 69}{res}        73
+
+{txt}R-squared:{col 49}Obs per group:
+     Within  = {res}0.3174{col 63}{txt}min{col 67}={col 69}{res}         4
+{txt}     Between = {res}0.8411{col 63}{txt}avg{col 67}={col 69}{res}       5.8
+{txt}     Overall = {res}0.7309{col 63}{txt}max{col 67}={col 69}{res}         6
+
+{txt}{col 49}F({res}7{txt},{res}345{txt}){col 67}={col 70}{res}    22.92
+{txt}corr(u_i, Xb) = {res}0.4445{txt}{col 49}Prob > F{col 67}={col 73}{res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Deps_fo{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.1703998{col 26}{space 2} .0540286{col 37}{space 1}   -3.15{col 46}{space 3}0.002{col 54}{space 4}-.2766668{col 67}{space 3}-.0641329
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0380114{col 26}{space 2} .0322355{col 37}{space 1}   -1.18{col 46}{space 3}0.239{col 54}{space 4}-.1014142{col 67}{space 3} .0253914
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .1555418{col 26}{space 2} .0499927{col 37}{space 1}    3.11{col 46}{space 3}0.002{col 54}{space 4} .0572131{col 67}{space 3} .2538706
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .2463187{col 26}{space 2} .0382969{col 37}{space 1}    6.43{col 46}{space 3}0.000{col 54}{space 4} .1709939{col 67}{space 3} .3216436
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .2089256{col 26}{space 2} .0344479{col 37}{space 1}    6.06{col 46}{space 3}0.000{col 54}{space 4} .1411714{col 67}{space 3} .2766799
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}-.1239224{col 26}{space 2} .0340454{col 37}{space 1}   -3.64{col 46}{space 3}0.000{col 54}{space 4}-.1908851{col 67}{space 3}-.0569598
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}-.1076678{col 26}{space 2} .0645315{col 37}{space 1}   -1.67{col 46}{space 3}0.096{col 54}{space 4}-.2345925{col 67}{space 3} .0192568
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 10.92066{col 26}{space 2} 1.063925{col 37}{space 1}   10.26{col 46}{space 3}0.000{col 54}{space 4}  8.82806{col 67}{space 3} 13.01325
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .23364722
+     {txt}sigma_e {c |} {res} .24484609
+         {txt}rho {c |} {res} .47660838{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+F test that all u_i=0: F({res}72{txt}, {res}345{txt}) = {res}3.41{col 62}{txt}Prob > F = {res}0.0000
+
+{com}. 
+. est store fex
+
+. 
+. xtreg Deps_fo Trans_i FADeC_a FADeC_na Rect_nfi Rect_fi Deps_i Cap_i, re
+{res}
+{txt}Random-effects GLS regression                   Number of obs     = {res}       425
+{txt}Group variable: {res}Identifiant                     {txt}Number of groups  = {res}        73
+
+{txt}R-squared:                                      Obs per group:
+     Within  = {res}0.3054                                         {txt}min = {res}         4
+{txt}     Between = {res}0.8679                                         {txt}avg = {res}       5.8
+{txt}     Overall = {res}0.7523                                         {txt}max = {res}         6
+
+                                                {txt}Wald chi2({res}7{txt})      =  {res}   629.11
+{txt}corr(u_i, X) = {res}0{txt} (assumed)                      Prob > chi2       =     {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Deps_fo{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.1417563{col 26}{space 2}  .052407{col 37}{space 1}   -2.70{col 46}{space 3}0.007{col 54}{space 4}-.2444721{col 67}{space 3}-.0390405
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0355984{col 26}{space 2} .0305696{col 37}{space 1}   -1.16{col 46}{space 3}0.244{col 54}{space 4}-.0955138{col 67}{space 3}  .024317
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .1879601{col 26}{space 2} .0454519{col 37}{space 1}    4.14{col 46}{space 3}0.000{col 54}{space 4} .0988759{col 67}{space 3} .2770442
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .2831534{col 26}{space 2} .0230326{col 37}{space 1}   12.29{col 46}{space 3}0.000{col 54}{space 4} .2380103{col 67}{space 3} .3282965
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2}  .277233{col 26}{space 2} .0233755{col 37}{space 1}   11.86{col 46}{space 3}0.000{col 54}{space 4} .2314179{col 67}{space 3} .3230481
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}-.0904828{col 26}{space 2} .0330307{col 37}{space 1}   -2.74{col 46}{space 3}0.006{col 54}{space 4}-.1552217{col 67}{space 3}-.0257439
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}-.1089003{col 26}{space 2} .0589507{col 37}{space 1}   -1.85{col 46}{space 3}0.065{col 54}{space 4}-.2244416{col 67}{space 3} .0066409
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 8.556595{col 26}{space 2} .8695901{col 37}{space 1}    9.84{col 46}{space 3}0.000{col 54}{space 4} 6.852229{col 67}{space 3} 10.26096
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .15322331
+     {txt}sigma_e {c |} {res} .24484609
+         {txt}rho {c |} {res} .28141232{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+
+{com}. 
+. est store rex
+
+. 
+. xttest0
+
+{txt}Breusch and Pagan Lagrangian multiplier test for random effects
+
+        Deps_fo[Identifiant,t] = Xb + u[Identifiant] + e[Identifiant,t]
+
+{col 9}Estimated results:
+{col 26}{c |}{col 34}Var{col 42}SD = sqrt(Var)
+{col 17}{hline 9}{c +}{hline 29}
+{col 16}  Deps_fo {c |}  {res} .3405187       .5835398
+{col 24}{txt}e {c |}  {res} .0599496       .2448461
+{col 24}{txt}u {c |}  {res} .0234774       .1532233
+
+{txt}{col 9}Test: Var(u) = 0
+{col 30}{help j_chibar:chibar2(01)} ={col 44}{res}   62.69
+{txt}{col 27}Prob > chibar2 = {col 45}{res} 0.0000
+
+{com}. 
+. xtreg Deps_fo Trans_i FADeC_a FADeC_na Rect_nfi Rect_fi Deps_i Cap_i, re
+{res}
+{txt}Random-effects GLS regression                   Number of obs     = {res}       425
+{txt}Group variable: {res}Identifiant                     {txt}Number of groups  = {res}        73
+
+{txt}R-squared:                                      Obs per group:
+     Within  = {res}0.3054                                         {txt}min = {res}         4
+{txt}     Between = {res}0.8679                                         {txt}avg = {res}       5.8
+{txt}     Overall = {res}0.7523                                         {txt}max = {res}         6
+
+                                                {txt}Wald chi2({res}7{txt})      =  {res}   629.11
+{txt}corr(u_i, X) = {res}0{txt} (assumed)                      Prob > chi2       =     {res}0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Deps_fo{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.1417563{col 26}{space 2}  .052407{col 37}{space 1}   -2.70{col 46}{space 3}0.007{col 54}{space 4}-.2444721{col 67}{space 3}-.0390405
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0355984{col 26}{space 2} .0305696{col 37}{space 1}   -1.16{col 46}{space 3}0.244{col 54}{space 4}-.0955138{col 67}{space 3}  .024317
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .1879601{col 26}{space 2} .0454519{col 37}{space 1}    4.14{col 46}{space 3}0.000{col 54}{space 4} .0988759{col 67}{space 3} .2770442
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .2831534{col 26}{space 2} .0230326{col 37}{space 1}   12.29{col 46}{space 3}0.000{col 54}{space 4} .2380103{col 67}{space 3} .3282965
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2}  .277233{col 26}{space 2} .0233755{col 37}{space 1}   11.86{col 46}{space 3}0.000{col 54}{space 4} .2314179{col 67}{space 3} .3230481
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}-.0904828{col 26}{space 2} .0330307{col 37}{space 1}   -2.74{col 46}{space 3}0.006{col 54}{space 4}-.1552217{col 67}{space 3}-.0257439
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}-.1089003{col 26}{space 2} .0589507{col 37}{space 1}   -1.85{col 46}{space 3}0.065{col 54}{space 4}-.2244416{col 67}{space 3} .0066409
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 8.556595{col 26}{space 2} .8695901{col 37}{space 1}    9.84{col 46}{space 3}0.000{col 54}{space 4} 6.852229{col 67}{space 3} 10.26096
+{txt}{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+     sigma_u {c |} {res} .15322331
+     {txt}sigma_e {c |} {res} .24484609
+         {txt}rho {c |} {res} .28141232{txt}   (fraction of variance due to u_i)
+{hline 13}{c BT}{hline 64}
+
+{com}. 
+. predict residu4
+({txt}option {bf:xb} assumed; fitted values)
+(13 missing values generated)
+
+{com}. 
+. sktest residu4
+{res}
+{txt}Skewness and kurtosis tests for normality
+{col 58}{hline 5} Joint test {hline 5}
+{col 5}Variable {c |}{col 22}Obs   Pr(skewness)   Pr(kurtosis)   Adj chi2(2)  Prob>chi2
+{hline 13}{c +}{hline 65}
+     residu4 {c |}{res}{col 16}      425{col 34}0.0249{col 49}0.1829{col 60}     6.67{col 74}0.0356
+
+{com}. 
+. xtserial residu4
+
+{txt}Wooldridge test for autocorrelation in panel data
+H0: no first-order autocorrelation
+{col 5}F(  1,      70) = {res}     0.075
+{txt}{col 12}Prob > F = {res}     0.7846
+
+{com}. 
+. gen residu4carre = residu4^2
+{txt}(13 missing values generated)
+
+{com}. 
+. reg residu4carre Trans_i FADeC_a FADeC_na Rect_nfi Rect_fi Deps_i Cap_i
+
+{txt}      Source {c |}       SS           df       MS      Number of obs   ={res}       425
+{txt}{hline 13}{c +}{hline 34}   F(7, 417)       = {res} 67275.88
+{txt}       Model {c |} {res} 59726.6294         7  8532.37563   {txt}Prob > F        ={res}    0.0000
+{txt}    Residual {c |} {res} 52.8867194       417  .126826665   {txt}R-squared       ={res}    0.9991
+{txt}{hline 13}{c +}{hline 34}   Adj R-squared   ={res}    0.9991
+{txt}       Total {c |} {res} 59779.5161       424  140.989425   {txt}Root MSE        =   {res} .35613
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}residu4carre{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      t{col 46}   P>|t|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-3.426879{col 26}{space 2} .0688609{col 37}{space 1}  -49.77{col 46}{space 3}0.000{col 54}{space 4}-3.562236{col 67}{space 3}-3.291521
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.9545439{col 26}{space 2} .0389712{col 37}{space 1}  -24.49{col 46}{space 3}0.000{col 54}{space 4}-1.031148{col 67}{space 3}-.8779394
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2}  4.47914{col 26}{space 2} .0565613{col 37}{space 1}   79.19{col 46}{space 3}0.000{col 54}{space 4} 4.367959{col 67}{space 3} 4.590321
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2}  6.85112{col 26}{space 2} .0220199{col 37}{space 1}  311.13{col 46}{space 3}0.000{col 54}{space 4} 6.807836{col 67}{space 3} 6.894404
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} 6.732197{col 26}{space 2} .0237168{col 37}{space 1}  283.86{col 46}{space 3}0.000{col 54}{space 4} 6.685577{col 67}{space 3} 6.778816
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}-2.129836{col 26}{space 2} .0441253{col 37}{space 1}  -48.27{col 46}{space 3}0.000{col 54}{space 4}-2.216572{col 67}{space 3}-2.043101
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2} -2.66475{col 26}{space 2} .0715659{col 37}{space 1}  -37.23{col 46}{space 3}0.000{col 54}{space 4}-2.805425{col 67}{space 3}-2.524075
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 62.19845{col 26}{space 2} 1.002572{col 37}{space 1}   62.04{col 46}{space 3}0.000{col 54}{space 4} 60.22772{col 67}{space 3} 64.16917
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{res}
+{com}. 
+. hettest
+
+{txt}Breusch–Pagan/Cook–Weisberg test for heteroskedasticity 
+Assumption: Normal error terms
+{p 0 11 0}Variable:{space 1}{res:{txt:Fitted values of} {res:residu4carre}}{p_end}
+
+H0: Constant variance
+
+{ralign 11:chi2({res:1})} = {res}{ralign 6:24.76}
+{txt}{ralign 11:Prob > chi2} = {res}{ralign 6:0.0000}
+
+{com}. 
+. xtgls Deps_fo Trans_i FADeC_a FADeC_na Rect_nfi Rect_fi Deps_i Cap_i, panels(hetero)
+
+{txt}Cross-sectional time-series FGLS regression
+
+Coefficients:  {res}generalized least squares
+{txt}Panels:        {res}heteroskedastic
+{txt}Correlation:   {res}no autocorrelation
+
+{txt}Estimated covariances{col 28}= {res}       73{txt}{col 49}Number of obs{col 67}= {res}       425
+{txt}Estimated autocorrelations{col 28}= {res}        0{txt}{col 49}Number of groups{col 67}= {res}        73
+{txt}Estimated coefficients{col 28}= {res}        8{txt}{col 49}Obs per group:
+{col 63}min{col 67}= {res}         4
+{txt}{col 63}avg{col 67}=  {res} 5.821918
+{txt}{col 63}max{col 67}= {res}         6
+{txt}{col 49}Wald chi2({res}7{txt}){col 67}=  {res}  1724.13
+{txt}{col 49}Prob > chi2{col 67}= {res}    0.0000
+
+{txt}{hline 13}{c TT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{col 1}     Deps_fo{col 14}{c |} Coefficient{col 26}  Std. err.{col 38}      z{col 46}   P>|z|{col 54}     [95% con{col 67}f. interval]
+{hline 13}{c +}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+{space 5}Trans_i {c |}{col 14}{res}{space 2}-.1563447{col 26}{space 2} .0448687{col 37}{space 1}   -3.48{col 46}{space 3}0.000{col 54}{space 4}-.2442858{col 67}{space 3}-.0684036
+{txt}{space 5}FADeC_a {c |}{col 14}{res}{space 2}-.0528192{col 26}{space 2} .0249706{col 37}{space 1}   -2.12{col 46}{space 3}0.034{col 54}{space 4}-.1017607{col 67}{space 3}-.0038777
+{txt}{space 4}FADeC_na {c |}{col 14}{res}{space 2} .1722552{col 26}{space 2} .0394073{col 37}{space 1}    4.37{col 46}{space 3}0.000{col 54}{space 4} .0950184{col 67}{space 3}  .249492
+{txt}{space 4}Rect_nfi {c |}{col 14}{res}{space 2} .3032146{col 26}{space 2} .0150828{col 37}{space 1}   20.10{col 46}{space 3}0.000{col 54}{space 4} .2736529{col 67}{space 3} .3327763
+{txt}{space 5}Rect_fi {c |}{col 14}{res}{space 2} .3092856{col 26}{space 2} .0163729{col 37}{space 1}   18.89{col 46}{space 3}0.000{col 54}{space 4} .2771953{col 67}{space 3} .3413758
+{txt}{space 6}Deps_i {c |}{col 14}{res}{space 2}-.0469957{col 26}{space 2} .0308379{col 37}{space 1}   -1.52{col 46}{space 3}0.128{col 54}{space 4}-.1074368{col 67}{space 3} .0134454
+{txt}{space 7}Cap_i {c |}{col 14}{res}{space 2}-.0032682{col 26}{space 2} .0461091{col 37}{space 1}   -0.07{col 46}{space 3}0.943{col 54}{space 4}-.0936404{col 67}{space 3} .0871039
+{txt}{space 7}_cons {c |}{col 14}{res}{space 2} 6.587151{col 26}{space 2} .6529653{col 37}{space 1}   10.09{col 46}{space 3}0.000{col 54}{space 4} 5.307363{col 67}{space 3}  7.86694
+{txt}{hline 13}{c BT}{hline 11}{hline 11}{hline 9}{hline 8}{hline 13}{hline 12}
+
+{com}. log close
+      {txt}name:  {res}<unnamed>
+       {txt}log:  {res}C:\Users\TAF Lucas\Desktop\Mémoire\my_log_file.smcl
+  {txt}log type:  {res}smcl
+ {txt}closed on:  {res}22 May 2021, 00:02:32
+{txt}{.-}
+{smcl}
+{txt}{sf}{ul off}
